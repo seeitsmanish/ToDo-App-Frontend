@@ -1,3 +1,3 @@
-const BASE_URL = "https://todoapp-backend-ip4j.onrender.com:3000";
+onst BASE_URL = "https://todoapp-backend-ip4j.onrender.com/";
 
 export default BASE_URL;
