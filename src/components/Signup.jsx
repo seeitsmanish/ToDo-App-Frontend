@@ -9,11 +9,12 @@ import BASE_URL from "../config";
 import { useSetRecoilState } from "recoil";
 import { useNavigate } from "react-router-dom";
 import { snackbarState, userStatus } from "../states/Todos";
-
+import CircularProgress from '@mui/material/CircularProgress';
 function Signup() {
 
   const input2Ref = useRef(null);
   const [email, setEmail] = useState("");
+  const [loading, setLoading] = useState(false);
   const [password, setPassword] = useState("");
   const navigate = useNavigate();
   const setOpen = useSetRecoilState(snackbarState);
@@ -29,6 +30,8 @@ function Signup() {
       });
       return;
     }
+
+    setLoading(true);
     try {
       const res = await axios.post(
         BASE_URL + "/authentication/signup",
@@ -37,6 +40,7 @@ function Signup() {
           password: password,
         }
       );
+      setLoading(false);
       localStorage.setItem("token", res.data.token);
       navigate("/todos");
       setUserStatus(true);
@@ -47,6 +51,7 @@ function Signup() {
       });
     } catch (e) {
       console.log(e);
+      setLoading(false);
       setOpen({
         open: true,
         message: "User already exists",
@@ -69,6 +74,7 @@ function Signup() {
             }}
             label="username or email"
             size="small"
+	    disabled = {loading}
             fullWidth={true}
             onKeyDown={(e) => {
               if (e.key === "Enter") {
@@ -85,6 +91,7 @@ function Signup() {
             label="password"
             type="password"
             size="small"
+	    disabled = {loading}
             fullWidth={true}
             inputRef={input2Ref}
             onKeyDown={(e) => {
@@ -102,7 +109,11 @@ function Signup() {
             variant="contained"
             onClick={signinuser}
           >
-            Signup
+            {loading ? (
+          <CircularProgress size={24} color="inherit" />
+        ) : (
+         <div> SignUp </div>
+        )}
           </Button>
         </CardActions>
       </Card>
